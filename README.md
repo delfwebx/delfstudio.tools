@@ -5,6 +5,7 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 | Tool | Folder | What it does |
 |---|---|---|
 | PDF Optimiser | `pdf-optimiser/` | Makes large PDF files smaller, without uploading them |
+| Image Optimiser | `image-optimiser/` | Shrinks photos for email and web: compression levels, target file size, resize, batch rename, ZIP download |
 | QR Code Generator | `qr-code-generator/` | Makes static QR codes (link, text, Wi-Fi, email, phone, WhatsApp, contact card) with colours, shapes and a logo |
 
 `index.html` at the top level is the menu page that links to every tool.
@@ -14,6 +15,15 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 1. Create a folder for it (for example `image-resizer/`) with its own `index.html`.
 2. Add one list item for it in the top-level `index.html`.
 3. Link its wordmark back to `../` so visitors can return to the menu.
+
+## Image Optimiser
+
+- `image-optimiser/index.html`: the page.
+- `image-optimiser/js/engine.js`: decodes, resizes and re-encodes images with the browser's own canvas. No third-party code.
+- `image-optimiser/js/worker.js`: runs the engine off the main thread where the browser supports it.
+- `image-optimiser/js/app.js`: settings, the queue, renaming and downloads.
+
+Output never carries the original's metadata (EXIF, GPS), because images are redrawn rather than copied.
 
 ## QR Code Generator
 
