@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email Click Heatmap by Delf Studio: see where people click in your emails</title>
+<meta name="description" content="Turn Salesforce Marketing Cloud click data into a heatmap drawn over your email. Tag every link, send, then see which spots get the clicks. Free, no sign-up, and nothing you paste leaves your browser.">
+<meta property="og:title" content="Email Click Heatmap by Delf Studio">
+<meta property="og:description" content="See where people click in your emails. Built for Salesforce Marketing Cloud senders.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FBF7F0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232E3B34'/%3E%3Crect x='16' y='12' width='32' height='40' rx='4' fill='%23FBF7F0'/%3E%3Ccircle cx='32' cy='30' r='9' fill='%23C9785B'/%3E%3Ccircle cx='32' cy='30' r='4' fill='%23A8402B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Caladea:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF7F0;--surface:#FFFFFF;--sunk:#F3ECE0;--ink:#2E3B34;--muted:#5F6E66;--line:#E8DFD1;
+  --accent:#A85D44;--accent-ink:#FFFFFF;--mark:#F5DED4;--mark-ink:#8E4A35;--dot:#C9785B;
+  --bad:#B03A2E;--bad-soft:#FBEAE7;--warn:#8A5A12;--warn-soft:#F8EBCB;--ok:#3D6B4B;--ok-soft:#E6F1E8;
+  --sans:"Poppins","Segoe UI",Helvetica,Arial,sans-serif;
+  --serif:"Caladea",Georgia,"Times New Roman",serif;
+  --code:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1C2420;--surface:#26312B;--sunk:#171E1A;--ink:#F6F0E6;--muted:#A9B5AD;--line:#39463F;
+    --accent:#E39C80;--accent-ink:#1C2420;--mark:#5B3B2F;--mark-ink:#F8E3DA;--dot:#E39C80;
+    --bad:#F09285;--bad-soft:#4A2622;--warn:#E5B466;--warn-soft:#4A3C1C;--ok:#7FC096;--ok-soft:#24392B;color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15.5px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.hidden{display:none !important}
+
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,3vw,32px)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.wm{font:300 19px/1 var(--sans);letter-spacing:-.02em;text-decoration:none}
+.wm b{font-weight:700}
+.wm i{font-style:normal;font-weight:700;color:var(--dot)}
+.top-note{font-size:13.5px;color:var(--muted)}
+
+.hero{padding:clamp(16px,4vw,40px) 0 clamp(20px,3vw,28px)}
+.hero h1{font:700 clamp(32px,5.6vw,54px)/1.02 var(--sans);letter-spacing:-.035em;text-wrap:balance;max-width:18ch}
+.hero p{font:400 clamp(17.5px,2.1vw,19.5px)/1.55 var(--serif);color:var(--muted);max-width:66ch;margin-top:14px}
+
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:6px;margin-bottom:18px;border:1px solid var(--line);border-radius:99px;background:var(--surface);width:fit-content;max-width:100%}
+nav.tabs button{border:0;background:none;padding:9px 18px;border-radius:99px;font-weight:600;font-size:14.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button.on{background:var(--ink);color:var(--paper)}
+section.tab{display:none}
+section.tab.on{display:block}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:16px}
+.card h2{font:600 18px/1.3 var(--sans);letter-spacing:-.01em;margin:0 0 6px}
+.card h3{font:600 15px/1.3 var(--sans);margin:18px 0 6px}
+.card ul{margin:6px 0 0;padding-left:20px}
+.card ul li{margin:8px 0;max-width:86ch}
+label.f{font-weight:600;font-size:14px;display:block;margin:14px 0 5px}
+.hint{color:var(--muted);font-size:13.5px;font-weight:400}
+p.hint{margin:6px 0 0;max-width:86ch}
+input[type=text],textarea{width:100%;border:1px solid var(--muted);border-radius:10px;padding:9px 11px;background:var(--paper);color:var(--ink)}
+input[type=text]{font-size:15px}
+textarea{font:13px/1.5 var(--code);min-height:180px;resize:vertical}
+textarea.code{min-height:130px;background:var(--sunk);border-color:var(--line);white-space:pre;overflow:auto}
+input[type=file]{font-size:13.5px;margin-top:6px;max-width:100%}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 300px;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:99px;padding:10px 18px;font-weight:600;font-size:14.5px;cursor:pointer;margin:14px 8px 0 0;white-space:nowrap}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.btn.small{padding:6px 12px;font-size:13px;margin:8px 0 0}
+.opts{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;background:var(--paper);padding:3px;gap:2px}
+.seg label{padding:6px 14px;cursor:pointer;font-size:13.5px;font-weight:500;border-radius:99px;position:relative}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--ink);color:var(--paper)}
+.seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.chk{font-size:14px;display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.chk input{width:17px;height:17px;accent-color:var(--ink)}
+.msg{margin-top:14px;padding:11px 14px;border-radius:10px;font-size:14px;display:none}
+.msg.err{display:block;background:var(--bad-soft);color:var(--bad)}
+.msg.ok{display:block;background:var(--ok-soft);color:var(--ok)}
+.msg.warn{display:block;background:var(--warn-soft);color:var(--warn)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12.5px;background:var(--sunk)}
+td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td.url,div.url{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+code,.mono{font-family:var(--code);font-size:13px}
+code{background:var(--sunk);padding:1px 5px;border-radius:5px}
+.pill{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;background:var(--sunk);color:var(--muted);margin-left:4px}
+.pill.w{background:var(--warn-soft);color:var(--warn)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stat b{display:block;font:700 24px/1.2 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.layout{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+/* The email preview keeps a light backdrop in both themes, because emails are designed on white. */
+.stagewrap{background:#E9E3D8;border:1px solid var(--line);border-radius:16px;padding:16px;overflow:auto;max-width:100%}
+.stage{position:relative;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.14)}
+.stage iframe{border:0;display:block;background:#fff}
+.overlay{position:absolute;left:0;top:0;pointer-events:auto}
+.hbox{position:absolute;border-radius:4px}
+.hbadge{position:absolute;transform:translateY(-100%);background:#1c2420;color:#fff;font:700 11px/1 Arial,sans-serif;padding:4px 6px;border-radius:4px;white-space:nowrap;cursor:help;z-index:3}
+.zbox{position:absolute;border:1.5px dashed #8a8f86;border-radius:4px}
+.band{position:absolute;left:0;border-top:1px dashed rgba(46,59,52,.4);pointer-events:none}
+.depth{position:absolute;font-size:12px;line-height:1.3;color:#2E3B34;padding:6px 0 0 10px;border-left:5px solid #ccc}
+.depth b{font-size:15px;display:block}
+.depth .hint{color:#5F6E66;font-size:12px}
+.side{flex:1 1 460px;min-width:min(340px,100%)}
+.side td{padding:8px 6px}
+.legend{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5F6E66;margin:0 0 10px}
+.legend i{display:inline-block;width:140px;height:10px;border-radius:5px;background:linear-gradient(90deg,hsl(210,85%,50%),hsl(105,85%,45%),hsl(50,95%,50%),hsl(0,85%,50%))}
+.bar{height:8px;background:var(--accent);border-radius:4px;min-width:2px}
+ol.steps{padding-left:22px;margin:8px 0}
+ol.steps li{margin:8px 0;max-width:90ch}
+.note{font-size:13.5px;color:var(--muted);max-width:86ch;margin-top:8px}
+.fieldtable td{font-family:var(--code);font-size:13px}
+footer{margin-top:clamp(40px,7vw,72px);padding:26px 0 40px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+@media (max-width:700px){.top-note{display:none}nav.tabs{border-radius:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <a class="wm" href="../" aria-label="Delf Studio tools, home">delf<b>studio</b><i>.</i></a>
+  <span class="top-note">Email Click Heatmap</span>
+</header>
+
+<div class="hero">
+  <h1>See where people click in your emails.</h1>
+  <p>For teams who send with Salesforce Marketing Cloud. Give every link its own tag, send as usual, then turn the click numbers into a heatmap drawn over the email. Everything you paste stays in your browser.</p>
+</div>
+
+<nav class="tabs" role="tablist" aria-label="Steps">
+  <button data-tab="tag" class="on" role="tab" aria-selected="true">1. Tag email</button>
+  <button data-tab="report" role="tab" aria-selected="false">2. Heatmap report</button>
+  <button data-tab="setup" role="tab" aria-selected="false">3. Setup and code</button>
+</nav>
+
+<main>
+
+<!-- ================= TAG ================= -->
+<section class="tab on" id="tab-tag">
+  <div class="card">
+    <h2>How will this email be sent?</h2>
+    <div class="opts">
+      <div class="seg" id="mode-seg">
+        <label><input type="radio" name="mode" value="sfmc" checked>Sent from SFMC</label>
+        <label><input type="radio" name="mode" value="outlook">Sent from Outlook</label>
+      </div>
+    </div>
+    <p class="hint" id="mode-hint-sfmc">SFMC already tracks clicks. This step gives every link its own alias and an <code>hm_id</code> number, so the same URL used in three places shows as three separate spots on the heatmap.</p>
+    <p class="hint hidden" id="mode-hint-outlook">Outlook does not track clicks, so every link is routed through your SFMC CloudPage tracker (see Setup). The tracker logs the click, then sends the reader to the real page instantly.</p>
+    <div id="outlook-fields" class="hidden">
+      <div class="row">
+        <div><label class="f" for="tag-base">Tracker CloudPage URL</label><input type="text" id="tag-base" placeholder="https://cloud.your-domain.com/hm-track" spellcheck="false"></div>
+        <div><label class="f" for="tag-eid">Email ID <span class="hint">(short name for this send)</span></label><input type="text" id="tag-eid" placeholder="2026-11-open-day" spellcheck="false"></div>
+      </div>
+      <div class="opts"><label class="chk"><input type="checkbox" id="tag-pixel" checked> Add open-tracking pixel <span class="hint">(only counts when images are shown)</span></label></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><label for="tag-in">Email HTML</label></h2>
+    <p class="hint">Paste the full HTML of the email (from Content Builder or your template).</p>
+    <textarea id="tag-in" spellcheck="false" placeholder="<!DOCTYPE html> ..."></textarea>
+    <button class="btn" id="tag-go" type="button">Tag links</button>
+    <button class="btn ghost" id="tag-demo" type="button">Load demo email</button>
+    <div class="msg" id="tag-msg" role="status"></div>
+  </div>
+
+  <div class="card hidden" id="tag-result">
+    <h2>Tagged links</h2>
+    <div class="tablewrap" id="tag-table"></div>
+    <h3><label for="tag-out">Tagged HTML</label> <span class="hint">(use this version for the send, and keep it for the report)</span></h3>
+    <textarea id="tag-out" spellcheck="false" readonly></textarea>
+    <button class="btn" id="tag-copy" type="button">Copy tagged HTML</button>
+    <button class="btn ghost" id="tag-to-report" type="button">Use in report</button>
+  </div>
+</section>
+
+<!-- ================= REPORT ================= -->
+<section class="tab" id="tab-report">
+  <div class="card">
+    <h2>What you need</h2>
+    <div class="row">
+      <div>
+        <label class="f" for="rep-html">Email HTML <span class="hint">(the tagged version you sent)</span></label>
+        <textarea id="rep-html" spellcheck="false" placeholder="Paste the tagged HTML"></textarea>
+      </div>
+      <div>
+        <label class="f" for="rep-data">Click data <span class="hint">(paste rows with a header, or choose a CSV)</span></label>
+        <textarea id="rep-data" spellcheck="false" placeholder="LinkName,LinkContent,Clicks,UniqueClicks&#10;hm01-book-a-tour,https://...,412,350"></textarea>
+        <input type="file" id="rep-file" accept=".csv,.txt,.tsv,text/csv" aria-label="Choose a CSV file of click data">
+      </div>
+    </div>
+    <label class="f" for="rep-imgs">Email images <span class="hint">(optional) Images that are online load by themselves. If some are missing or not published yet, choose the image files here and they are matched by file name.</span></label>
+    <input type="file" id="rep-imgs" accept="image/*" multiple> <span class="hint" id="img-count"></span>
+    <div class="opts">
+      <div class="seg"><label><input type="radio" name="metric" value="total" checked>Total clicks</label><label><input type="radio" name="metric" value="unique">Unique clicks</label></div>
+      <div class="seg"><label><input type="radio" name="width" value="700" checked>Desktop</label><label><input type="radio" name="width" value="375">Mobile</label></div>
+      <label class="chk"><input type="checkbox" id="opt-labels" checked> Show labels</label>
+      <label class="chk"><input type="checkbox" id="opt-zero" checked> Outline links with 0 clicks</label>
+      <label class="chk"><input type="checkbox" id="opt-bots" checked> Remove suspected bot clicks</label>
+      <label class="chk"><input type="checkbox" id="opt-online" checked> Load the email's online images</label>
+    </div>
+    <button class="btn" id="rep-go" type="button">Build heatmap</button>
+    <button class="btn ghost" id="rep-demo" type="button">Load demo</button>
+    <div class="msg" id="rep-msg" role="status"></div>
+  </div>
+
+  <div id="rep-out" class="hidden">
+    <div class="stats" id="rep-stats"></div>
+    <div class="layout">
+      <div class="stagewrap">
+        <div class="legend">Fewer clicks <i></i> More clicks</div>
+        <div class="stage" id="stage"><iframe id="frame" title="Email preview" sandbox="allow-same-origin"></iframe><div class="overlay" id="overlay"></div></div>
+      </div>
+      <div class="side">
+        <div class="card"><h2>Links ranked by clicks</h2><div class="tablewrap" id="rep-table"></div></div>
+        <div class="card" id="rep-extra"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SETUP ================= -->
+<section class="tab" id="tab-setup">
+  <div class="card">
+    <h2>Which setup do I need?</h2>
+    <div class="tablewrap"><table>
+      <tr><th>How you send</th><th>Click tracking</th><th>What to do</th></tr>
+      <tr><td>SFMC sends the email (any inbox, Outlook included)</td><td>Built in</td><td>Tag in "Sent from SFMC" mode, send as normal, then export clicks with the SQL below (option A).</td></tr>
+      <tr><td>Designed in SFMC, pasted into Outlook and sent from Outlook</td><td>None by default</td><td>Set up the CloudPage tracker once (option B), then tag each email in "Sent from Outlook" mode.</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2>Option A: SFMC sends</h2>
+    <ol class="steps">
+      <li>Tag the email in <b>Sent from SFMC</b> mode and paste the tagged HTML into Content Builder.</li>
+      <li>Send as usual. Note the <b>Job ID</b> from Tracking (Email Studio, Tracking, Sends).</li>
+      <li>Create a data extension called <code>HM_ClickSummary</code> with these fields:
+        <table class="fieldtable" style="margin:8px 0 4px;max-width:520px">
+          <tr><th>Field</th><th>Type</th><th>Length</th></tr>
+          <tr><td>LinkName</td><td>Text</td><td>500</td></tr>
+          <tr><td>LinkContent</td><td>Text</td><td>4000</td></tr>
+          <tr><td>Clicks</td><td>Number</td><td></td></tr>
+          <tr><td>UniqueClicks</td><td>Number</td><td></td></tr>
+        </table></li>
+      <li>In Automation Studio, add a SQL Query activity with the query below (change the Job ID), target <code>HM_ClickSummary</code>, data action <b>Overwrite</b>, and run it.</li>
+      <li>Open the data extension's records, copy the rows (or export them as CSV) and paste them into the Report tab with the tagged HTML.</li>
+    </ol>
+    <textarea class="code" id="code-sql" readonly spellcheck="false" aria-label="SQL for the click summary">SELECT
+  c.LinkName,
+  c.LinkContent,
+  COUNT(*) AS Clicks,
+  COUNT(DISTINCT c.SubscriberKey) AS UniqueClicks
+FROM _Click c
+WHERE c.JobID = 123456
+GROUP BY c.LinkName, c.LinkContent</textarea>
+    <button class="btn small ghost" data-copy="code-sql" type="button">Copy SQL</button>
+    <p class="note">The _Click data view keeps about six months of history. Untagged emails also work: the report then matches clicks by URL, but repeated URLs can't be told apart.</p>
+  </div>
+
+  <div class="card">
+    <h2>Option B: Outlook sends (CloudPage tracker)</h2>
+    <ol class="steps">
+      <li>Create a data extension called <code>HM_Events</code> (use the same text for Name and External Key):
+        <div class="tablewrap"><table class="fieldtable" style="margin:8px 0 4px;max-width:620px">
+          <tr><th>Field</th><th>Type</th><th>Length</th><th>Notes</th></tr>
+          <tr><td>EventType</td><td>Text</td><td>1</td><td>c = click, o = open</td></tr>
+          <tr><td>EmailID</td><td>Text</td><td>100</td><td></td></tr>
+          <tr><td>LinkID</td><td>Text</td><td>50</td><td>hm01, hm02 ...</td></tr>
+          <tr><td>URL</td><td>Text</td><td>1000</td><td></td></tr>
+          <tr><td>Recipient</td><td>Text</td><td>254</td><td>optional, nullable</td></tr>
+          <tr><td>UserAgent</td><td>Text</td><td>500</td><td>used for device and bot checks</td></tr>
+          <tr><td>EventDate</td><td>Date</td><td></td><td>default value: Current date</td></tr>
+        </table></div>
+        Make every field nullable except EventType, and do not set a primary key.</li>
+      <li>Upload a 1x1 transparent GIF to Content Builder and copy its URL (only needed for open tracking).</li>
+      <li>Create a CloudPage (landing page), switch to code view, paste the code below, and edit the settings at the top: your allowed domains, your fallback page and the GIF URL. Publish it and copy its URL.</li>
+      <li>Tag each email in <b>Sent from Outlook</b> mode using that URL and a short Email ID, then paste the tagged HTML into Outlook.</li>
+      <li>Send yourself a test, click a link, and check that a row lands in <code>HM_Events</code>.</li>
+      <li>For the report, copy the rows for your Email ID (or export as CSV) and paste them in. Raw rows are best, because they include the user agent for device and bot checks.</li>
+    </ol>
+    <textarea class="code" id="code-ssjs" readonly spellcheck="false" style="min-height:300px" aria-label="CloudPage tracker code"><script runat="server">
+Platform.Load("Core", "1.1.1");
+
+// ===== Settings: change these three to your own =====
+var DE_NAME = "HM_Events";
+// Links can only redirect to these domains and their subdomains.
+// This stops anyone from using your CloudPage to redirect to other sites.
+var ALLOWED_DOMAINS = ["your-domain.com", "your-other-domain.com"];
+var FALLBACK_URL = "https://www.your-domain.com";
+var PIXEL_URL = "PASTE_YOUR_TRANSPARENT_GIF_URL_HERE";
+// ====================================================
+
+var target = FALLBACK_URL;
+
+function clip(s, n) {
+  s = s ? String(s) : "";
+  return s.length > n ? s.substring(0, n) : s;
+}
+
+function isAllowed(url) {
+  var m = /^https?:\/\/([^\/?#:]+)/i.exec(url);
+  if (!m) return false;
+  var host = m[1].toLowerCase();
+  for (var i = 0; i < ALLOWED_DOMAINS.length; i++) {
+    var d = ALLOWED_DOMAINS[i].toLowerCase();
+    var tail = "." + d;
+    if (host == d) return true;
+    if (host.length > tail.length && host.substring(host.length - tail.length) == tail) return true;
+  }
+  return false;
+}
+
+try {
+  var type = Platform.Request.GetQueryStringParameter("t") == "o" ? "o" : "c";
+  var emailId = clip(Platform.Request.GetQueryStringParameter("e"), 100);
+  var linkId = clip(Platform.Request.GetQueryStringParameter("l"), 50);
+  var url = Platform.Request.GetQueryStringParameter("u") || "";
+  var recipient = clip(Platform.Request.GetQueryStringParameter("r"), 254);
+  var ua = clip(Platform.Request.UserAgent, 500);
+
+  if (url.indexOf("%3A") > -1 || url.indexOf("%3a") > -1) {
+    try { url = decodeURIComponent(url); } catch (x) {}
+  }
+
+  if (type == "o") {
+    target = PIXEL_URL;
+  } else if (isAllowed(url)) {
+    target = url;
+  }
+
+  Platform.Function.InsertData(DE_NAME,
+    ["EventType", "EmailID", "LinkID", "URL", "Recipient", "UserAgent"],
+    [type, emailId, linkId, clip(url, 1000), recipient, ua]);
+} catch (e) {
+  // Never block the reader. If logging fails, still redirect.
+}
+
+// Redirect sits outside the try block on purpose (SFMC can treat it as an error inside try).
+Platform.Response.Redirect(target, false);
+</script></textarea>
+    <button class="btn small ghost" data-copy="code-ssjs" type="button">Copy CloudPage code</button>
+    <h3>Optional: summarise a large send</h3>
+    <p class="note">If there are too many rows to copy, run this query into a data extension with fields EventType, LinkID, Clicks, UniqueClicks. You lose the device and bot checks, so use raw rows when you can.</p>
+    <textarea class="code" id="code-sql2" readonly spellcheck="false" aria-label="SQL to summarise tracker events">SELECT
+  e.EventType,
+  e.LinkID,
+  COUNT(*) AS Clicks,
+  COUNT(DISTINCT e.Recipient) AS UniqueClicks
+FROM HM_Events e
+WHERE e.EmailID = '2026-11-open-day'
+GROUP BY e.EventType, e.LinkID</textarea>
+    <button class="btn small ghost" data-copy="code-sql2" type="button">Copy SQL</button>
+  </div>
+
+  <div class="card">
+    <h2>Good to know</h2>
+    <ul>
+      <li><b>No scroll tracking in email.</b> Inboxes block scripts, so no tool can see scrolling. The report shows <b>click depth</b> instead: how clicks split across the top, middle and bottom of the email.</li>
+      <li><b>Security scanners click links.</b> Company and school mail filters often open every link before the person sees the email. In Outlook mode the report removes clicks with bot-like user agents and bursts of 3 or more different links within 3 seconds. SFMC's _Click view has no user agent, so expect some noise there on internal sends.</li>
+      <li><b>Opens are rough.</b> Apple Mail preloads images (inflating opens) and Outlook often blocks images (hiding opens). Trust clicks more than opens.</li>
+      <li><b>Outlook buttons.</b> The tagger gives an Outlook VML button the same ID as its normal button, so both count as one spot.</li>
+      <li><b>Unique clicks in Outlook mode</b> need a recipient value. A single Outlook send to a list uses the same links for everyone, so you get total clicks only.</li>
+      <li><b>CloudPage usage.</b> Page views on CloudPages can count towards your SFMC Super Messages, depending on your contract. Worth a quick check before a big send.</li>
+      <li><b>Your data stays with you.</b> The email HTML and click rows you paste are processed in this browser tab and are not sent anywhere. When "Load the email's online images" is on, the preview fetches those images from wherever they are hosted, the same way an inbox would.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <span>Email Click Heatmap by Delf Studio.</span>
+  <span>Not affiliated with Salesforce. Salesforce and Marketing Cloud are trademarks of Salesforce, Inc. <a href="https://github.com/delfwebx/delfstudio.tools" rel="noopener">Source code</a>.</span>
+</footer>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>

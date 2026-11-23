@@ -8,13 +8,14 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 | Image Optimiser | `image-optimiser/` | Shrinks photos for email and web: compression levels, target file size, resize, batch rename, ZIP download |
 | Image Cropper | `image-cropper/` | Crops to ratios, exact social sizes, circles or rounded corners, then optimises; queue for batches |
 | QR Code Generator | `qr-code-generator/` | Makes static QR codes (link, text, Wi-Fi, email, phone, WhatsApp, contact card) with colours, shapes and a logo |
+| Email Click Heatmap | `email-click-heatmap/` | Specialised: tags links in Salesforce Marketing Cloud emails and draws a click heatmap from exported click data |
 
-`index.html` at the top level is the menu page that links to every tool.
+`index.html` at the top level is the menu page that links to every tool. It has two groups: Everyday tools and Specialised tools.
 
 ## Adding a tool
 
 1. Create a folder for it (for example `image-resizer/`) with its own `index.html`.
-2. Add one list item for it in the top-level `index.html`.
+2. Add one list item for it in the top-level `index.html`, inside the group it belongs to.
 3. Link its wordmark back to `../` so visitors can return to the menu.
 
 ## Image Optimiser
@@ -33,6 +34,13 @@ Output never carries the original's metadata (EXIF, GPS), because images are red
 - `image-cropper/js/engine.js`: resizes and encodes the cropped picture (same approach as the Image Optimiser).
 
 Exact-size presets follow platform recommendations checked in November 2026. To change one, edit its `value="s:WIDTH:HEIGHT"` and label in the preset list.
+
+## Email Click Heatmap
+
+- `email-click-heatmap/index.html`: the page, including the setup instructions, SQL and CloudPage tracker code shown to users.
+- `email-click-heatmap/js/app.js`: the link tagger, click-data parser, bot filter and heatmap drawing.
+
+The pasted email is previewed in a sandboxed frame with scripts removed. Tracking pixels are blanked in the preview so building a report never logs an open. The demo uses an invented school on example.com.
 
 ## QR Code Generator
 
