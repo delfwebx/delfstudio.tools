@@ -6,6 +6,7 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 |---|---|---|
 | PDF Optimiser | `pdf-optimiser/` | Makes large PDF files smaller, without uploading them |
 | Image Optimiser | `image-optimiser/` | Shrinks photos for email and web: compression levels, target file size, resize, batch rename, ZIP download |
+| Image Cropper | `image-cropper/` | Crops to ratios, exact social sizes, circles or rounded corners, then optimises; queue for batches |
 | QR Code Generator | `qr-code-generator/` | Makes static QR codes (link, text, Wi-Fi, email, phone, WhatsApp, contact card) with colours, shapes and a logo |
 
 `index.html` at the top level is the menu page that links to every tool.
@@ -24,6 +25,14 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 - `image-optimiser/js/app.js`: settings, the queue, renaming and downloads.
 
 Output never carries the original's metadata (EXIF, GPS), because images are redrawn rather than copied.
+
+## Image Cropper
+
+- `image-cropper/index.html`: the page, including the list of crop presets (the `<select id="preset">` options).
+- `image-cropper/js/app.js`: the crop frame, rotation and flips, the queue, renaming and downloads.
+- `image-cropper/js/engine.js`: resizes and encodes the cropped picture (same approach as the Image Optimiser).
+
+Exact-size presets follow platform recommendations checked in November 2026. To change one, edit its `value="s:WIDTH:HEIGHT"` and label in the preset list.
 
 ## QR Code Generator
 
