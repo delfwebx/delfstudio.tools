@@ -18,6 +18,9 @@ There is no build step and no server code. Any static host works.
 | Light | 200 dpi | Printing |
 | Balanced | 150 dpi | Most files, on-screen reading |
 | Maximum | 96 dpi | Smallest possible file |
+| Custom size | Searched per file | Hitting a size limit, such as "under 5 MB" |
+
+Custom size runs Ghostscript several times per file (best quality, smallest, then up to six tries in between) and keeps the largest result that fits under the target.
 
 ## Run it locally
 

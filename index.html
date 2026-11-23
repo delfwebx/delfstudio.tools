@@ -54,7 +54,13 @@ h1,h2,h3,p{margin:0}
 .hero h1 .s3{font-size:.5em;font-weight:500;margin-top:.22em;letter-spacing:-.02em;color:var(--accent)}
 .hero p{font:400 clamp(18px,2.4vw,21px)/1.55 var(--serif);color:var(--muted);max-width:56ch;margin-top:22px}
 
-.levels{border:0;padding:0;margin:0 0 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.levels{border:0;padding:0;margin:0 0 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.target{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:15px}
+.target label{font-weight:600}
+.target input{width:6.5em;padding:7px 10px;border:1px solid var(--muted);border-radius:8px;background:var(--paper);font-variant-numeric:tabular-nums}
+.target input[aria-invalid="true"]{border-color:var(--bad)}
+.target small{flex-basis:100%;font-size:13px;color:var(--muted)}
+.target .bad{color:var(--bad)}
 .levels legend{padding:0;margin-bottom:10px;font-weight:600;font-size:15px}
 .level{position:relative;display:block;cursor:pointer}
 .level input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
@@ -153,6 +159,14 @@ footer{margin-top:clamp(56px,9vw,96px);padding:26px 0 40px;border-top:1px solid 
       <label class="level"><input type="radio" name="preset" value="light"><span><b>Light</b><small>Sharpest images. Good for printing.</small></span></label>
       <label class="level"><input type="radio" name="preset" value="balanced" checked><span><b>Balanced</b><small>Clear on screen, much smaller. Best for most files.</small></span></label>
       <label class="level"><input type="radio" name="preset" value="maximum"><span><b>Maximum</b><small>Smallest file. Images look softer.</small></span></label>
+      <label class="level"><input type="radio" name="preset" value="target"><span><b>Custom size</b><small>You pick the size, it finds the best quality.</small></span></label>
+      <div class="target" id="targetRow" hidden>
+        <label for="targetMb">Keep each file under</label>
+        <input id="targetMb" type="number" inputmode="decimal" min="0.1" step="0.1" value="5" aria-describedby="targetNote">
+        <span>MB</span>
+        <small id="targetNote">The optimiser tries several quality settings and keeps the sharpest one that fits, so this takes a little longer than the fixed levels.</small>
+        <small class="bad" id="targetHint" hidden>Enter a size above 0, for example 4.9.</small>
+      </div>
     </fieldset>
 
     <label class="drop" id="drop">
@@ -185,7 +199,7 @@ footer{margin-top:clamp(56px,9vw,96px);padding:26px 0 40px;border-top:1px solid 
       <section>
         <h2>How to use it</h2>
         <ol>
-          <li>Pick a level. Balanced suits most files.</li>
+          <li>Pick a level, or choose Custom size and type the size you need. Balanced suits most files.</li>
           <li>Drop in one PDF or a whole batch.</li>
           <li>Check how much smaller each file is, then download it. Not small enough? Switch level and the files are redone for you.</li>
         </ol>
@@ -196,6 +210,10 @@ footer{margin-top:clamp(56px,9vw,96px);padding:26px 0 40px;border-top:1px solid 
         <details>
           <summary>How much smaller will my PDF get?</summary>
           <p>It depends on what is inside. Scans, photo-heavy brochures and presentations exported at full quality often shrink by 50 to 90 percent. PDFs that are mostly text are already small, so they may only lose a little, and the tool will tell you when there is nothing worth saving.</p>
+        </details>
+        <details>
+          <summary>Can I choose the exact file size?</summary>
+          <p>Yes. Choose Custom size and enter the size you need in MB, for example 4.9 to fit under a 5 MB upload limit. The optimiser tries several quality settings and keeps the best-looking version that fits, landing as close under your number as it can. If a file cannot go that small, or is already under your size, it tells you.</p>
         </details>
         <details>
           <summary>Will it lower the quality?</summary>

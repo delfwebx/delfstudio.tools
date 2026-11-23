@@ -21,7 +21,35 @@ let worker = null;
 let activeId = null;
 let engineReady = false;
 
-const preset = () => (presetInputs.find((i) => i.checked) || {}).value || 'balanced';
+const targetInput = $('#targetMb');
+const targetRow = $('#targetRow');
+const targetHint = $('#targetHint');
+let lastTargetBytes = 5 * 1024 * 1024;
+
+const level = () => (presetInputs.find((i) => i.checked) || {}).value || 'balanced';
+
+function readTarget() {
+  const mb = parseFloat(String(targetInput.value).replace(',', '.'));
+  if (!isFinite(mb) || mb <= 0) return null;
+  return Math.round(mb * 1024 * 1024);
+}
+
+// A setting is either a level name or "target:<bytes>".
+function setting() {
+  if (level() !== 'target') return level();
+  const bytes = readTarget();
+  if (bytes) lastTargetBytes = bytes;
+  return 'target:' + lastTargetBytes;
+}
+
+const targetOf = (s) => (typeof s === 'string' && s.startsWith('target:') ? Number(s.slice(7)) : 0);
+
+function assign(item, s) {
+  item.setting = s;
+  item.outcome = null;
+  const target = targetOf(s);
+  item.status = target && item.file.size <= target ? 'under' : 'queued';
+}
 
 function fmt(bytes) {
   if (bytes < 1024) return bytes + ' B';
@@ -67,8 +95,8 @@ function onWorkerMessage(e) {
   const item = items.find((i) => i.id === m.id);
   if (!item) { if (m.type === 'done' || m.type === 'error') { activeId = null; pump(); } return; }
 
-  if (m.type === 'start') { item.status = 'working'; item.page = 0; item.pages = 0; }
-  else if (m.type === 'progress') { item.page = m.page; item.pages = m.pages; }
+  if (m.type === 'start') { item.status = 'working'; item.page = 0; item.pages = 0; item.attempt = 0; }
+  else if (m.type === 'progress') { item.page = m.page; item.pages = m.pages; item.attempt = m.attempt; }
   else if (m.type === 'done') {
     const blob = new Blob([m.buffer], { type: 'application/pdf' });
     item.pages = m.pages;
@@ -76,6 +104,7 @@ function onWorkerMessage(e) {
       item.status = 'lean';
     } else {
       item.status = 'done';
+      item.outcome = m.outcome;
       item.outSize = blob.size;
       item.url = URL.createObjectURL(blob);
       item.blob = blob;
@@ -101,7 +130,7 @@ async function pump() {
   try {
     const buffer = await item.file.arrayBuffer();
     if (!items.includes(item)) { activeId = null; pump(); return; }
-    worker.postMessage({ type: 'job', id: item.id, buffer, preset: item.preset }, [buffer]);
+    worker.postMessage({ type: 'job', id: item.id, buffer, setting: item.setting }, [buffer]);
   } catch (err) {
     item.status = 'error';
     item.code = 'memory';
@@ -117,7 +146,8 @@ function addFiles(fileList) {
   const files = [...fileList];
   if (!files.length) return;
   for (const file of files) {
-    const item = { id: nextId++, file, preset: preset(), status: 'queued' };
+    const item = { id: nextId++, file };
+    assign(item, setting());
     const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
     if (!isPdf) { item.status = 'error'; item.code = 'type'; }
     else if (file.size > MAX_BYTES) { item.status = 'error'; item.code = 'size'; }
@@ -133,15 +163,14 @@ function release(item) {
 }
 
 function rerunAll() {
-  const p = preset();
+  const p = setting();
   let restart = false;
   for (const item of items) {
     if (item.status === 'error' && ['type', 'size', 'locked', 'unreadable'].includes(item.code)) continue;
-    if (item.preset === p && item.status !== 'error') continue;
+    if (item.setting === p && item.status !== 'error') continue;
     if (item.id === activeId) restart = true;
     release(item);
-    item.preset = p;
-    item.status = 'queued';
+    assign(item, p);
   }
   if (restart) {
     // The running job used the old level. Stop it and start over.
@@ -184,6 +213,8 @@ function renderItem(item) {
     meta.append(el('span', 'was', fmt(item.file.size)), el('span', 'arrow', 'to'), el('strong', '', fmt(item.outSize)), el('span', 'badge', saved + '% smaller'));
   } else if (item.status === 'lean') {
     meta.append(el('span', '', fmt(item.file.size)), el('span', 'badge quiet', 'Already lean'));
+  } else if (item.status === 'under') {
+    meta.append(el('span', '', fmt(item.file.size)), el('span', 'badge quiet', 'Already under your size'));
   } else {
     meta.append(el('span', '', fmt(item.file.size)));
   }
@@ -192,7 +223,15 @@ function renderItem(item) {
   const note = el('span', 'item-note');
   if (item.status === 'queued') note.textContent = 'Waiting';
   else if (item.status === 'reading') note.textContent = engineReady ? 'Reading file' : 'Getting ready';
-  else if (item.status === 'working') note.textContent = item.pages ? 'Compressing page ' + Math.max(1, item.page) + ' of ' + item.pages : 'Compressing';
+  else if (item.status === 'working') {
+    const where = item.pages ? 'page ' + Math.max(1, item.page) + ' of ' + item.pages : '';
+    if (item.attempt) note.textContent = 'Finding the best quality for your size, try ' + item.attempt + (where ? ': ' + where : '');
+    else note.textContent = where ? 'Compressing ' + where : 'Compressing';
+  }
+  else if (item.status === 'under') note.textContent = 'This file is already smaller than ' + fmt(targetOf(item.setting)) + ', so there is nothing to do.';
+  else if (item.status === 'done' && item.outcome === 'hit') note.textContent = 'Best quality that fits under ' + fmt(targetOf(item.setting)) + '.';
+  else if (item.status === 'done' && item.outcome === 'maxed') note.textContent = 'This is the highest quality available for this file. It comes in under your ' + fmt(targetOf(item.setting)) + ', and going bigger would not make it look better.';
+  else if (item.status === 'done' && item.outcome === 'floor') note.textContent = 'This file cannot get down to ' + fmt(targetOf(item.setting)) + '. This is the smallest it goes.';
   else if (item.status === 'lean') note.textContent = 'This PDF is already well optimised, so there is nothing worth saving at this level. Try a stronger level, or keep your original.';
   else if (item.status === 'error') note.textContent = ERRORS[item.code] || ERRORS.failed;
   if (note.textContent) main.append(note);
@@ -228,7 +267,7 @@ function renderItem(item) {
   if ((item.status === 'error' && ['memory', 'engine', 'failed'].includes(item.code))) {
     const retry = el('button', 'btn', 'Retry');
     retry.type = 'button';
-    retry.addEventListener('click', () => { item.status = 'queued'; item.preset = preset(); render(); pump(); });
+    retry.addEventListener('click', () => { assign(item, setting()); render(); pump(); });
     actions.append(retry);
   }
   const remove = el('button', 'btn ghost', 'Remove');
@@ -367,7 +406,26 @@ window.addEventListener('drop', (e) => {
   addFiles(e.dataTransfer.files);
 });
 
-presetInputs.forEach((input) => input.addEventListener('change', rerunAll));
+function syncTargetRow() {
+  targetRow.hidden = level() !== 'target';
+}
+
+function applyTarget() {
+  if (level() !== 'target') return;
+  const ok = readTarget() !== null;
+  targetHint.hidden = ok;
+  targetInput.setAttribute('aria-invalid', ok ? 'false' : 'true');
+  if (ok) rerunAll();
+}
+
+presetInputs.forEach((input) => input.addEventListener('change', () => {
+  syncTargetRow();
+  if (level() === 'target') { targetInput.focus(); targetInput.select(); applyTarget(); }
+  else rerunAll();
+}));
+targetInput.addEventListener('change', applyTarget);
+targetInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); targetInput.blur(); } });
+syncTargetRow();
 
 clearBtn.addEventListener('click', () => {
   if (activeId !== null) { worker.terminate(); activeId = null; engineReady = false; startWorker(); }
