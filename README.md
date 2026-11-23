@@ -5,6 +5,7 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 | Tool | Folder | What it does |
 |---|---|---|
 | PDF Optimiser | `pdf-optimiser/` | Makes large PDF files smaller, without uploading them |
+| QR Code Generator | `qr-code-generator/` | Makes static QR codes (link, text, Wi-Fi, email, phone, WhatsApp, contact card) with colours, shapes and a logo |
 
 `index.html` at the top level is the menu page that links to every tool.
 
@@ -13,6 +14,14 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 1. Create a folder for it (for example `image-resizer/`) with its own `index.html`.
 2. Add one list item for it in the top-level `index.html`.
 3. Link its wordmark back to `../` so visitors can return to the menu.
+
+## QR Code Generator
+
+- `qr-code-generator/index.html`: the page.
+- `qr-code-generator/js/app.js`: builds the content for each code type, draws the code as SVG, and exports PNG and SVG.
+- `qr-code-generator/vendor/qrcode.mjs`: [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) 2.0.4 by Kazuhiko Arase (MIT licence).
+
+Codes are static: the content is stored in the code itself, so nothing passes through a server and nothing expires.
 
 ## PDF Optimiser
 

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code Generator by Delf Studio: free QR codes that never expire</title>
+<meta name="description" content="Make a QR code for a link, Wi-Fi, WhatsApp, email, phone number or contact card. Free, no sign-up, no scan limits, and the codes never expire. Add your colours and logo, download as PNG or SVG.">
+<meta property="og:title" content="QR Code Generator by Delf Studio">
+<meta property="og:description" content="Free QR codes that never expire. Add your colours and logo, download as PNG or SVG.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FBF7F0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232E3B34'/%3E%3Cpath fill='%23FBF7F0' d='M14 14h14v14H14zM36 14h14v14H36zM14 36h14v14H14z'/%3E%3Cpath fill='%23C9785B' d='M36 36h6v6h-6zM44 44h6v6h-6z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Caladea:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF7F0;--surface:#FFFFFF;--sunk:#F3ECE0;--ink:#2E3B34;--muted:#5F6E66;--line:#E8DFD1;
+  --accent:#A85D44;--accent-ink:#FFFFFF;--mark:#F5DED4;--mark-ink:#8E4A35;--dot:#C9785B;
+  --bad:#B03A2E;--warn:#8A5A12;
+  --sans:"Poppins","Segoe UI",Helvetica,Arial,sans-serif;
+  --serif:"Caladea",Georgia,"Times New Roman",serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1C2420;--surface:#26312B;--sunk:#171E1A;--ink:#F6F0E6;--muted:#A9B5AD;--line:#39463F;
+    --accent:#E39C80;--accent-ink:#1C2420;--mark:#5B3B2F;--mark-ink:#F8E3DA;--dot:#E39C80;
+    --bad:#F09285;--warn:#E5B466;color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+[hidden]{display:none !important}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+.wrap{max-width:1040px;margin:0 auto;padding:0 clamp(18px,4vw,32px)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.wm{font:300 19px/1 var(--sans);letter-spacing:-.02em;text-decoration:none}
+.wm b{font-weight:700}
+.wm i{font-style:normal;font-weight:700;color:var(--dot)}
+.top-note{font-size:13.5px;color:var(--muted)}
+
+.hero{padding:clamp(20px,5vw,48px) 0 clamp(24px,4vw,36px)}
+.hero h1{font:700 clamp(36px,7vw,66px)/1 var(--sans);letter-spacing:-.035em;text-wrap:balance}
+.hero p{font:400 clamp(18px,2.3vw,20px)/1.55 var(--serif);color:var(--muted);max-width:58ch;margin-top:16px}
+
+.bench{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,380px);gap:clamp(24px,4vw,48px);align-items:start}
+.form{display:flex;flex-direction:column;gap:26px;min-width:0}
+.group{border:0;padding:0;margin:0;min-width:0;display:flex;flex-direction:column;gap:12px}
+.group > legend,.group-title{padding:0;font:600 17px/1.3 var(--sans);letter-spacing:-.01em;margin-bottom:10px}
+.group-title{margin-bottom:0}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative;cursor:pointer}
+.chip input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.chip span{display:block;padding:8px 14px;border:1px solid var(--line);border-radius:99px;background:var(--surface);font-weight:500;font-size:14.5px;white-space:nowrap}
+.chip:hover span{border-color:var(--muted)}
+.chip input:checked + span{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.chip input:focus-visible + span{outline:2px solid var(--accent);outline-offset:3px}
+
+.fields{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-weight:500;font-size:14px}
+.field input,.field textarea,.field select{width:100%;padding:11px 12px;border:1px solid var(--muted);border-radius:10px;background:var(--surface);font-size:16px}
+.field textarea{resize:vertical;min-height:84px;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:.75}
+.check{display:flex;align-items:center;gap:8px;font-size:15px;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--ink)}
+
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.colour{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:500}
+.colour input{width:44px;height:36px;padding:2px;border:1px solid var(--muted);border-radius:8px;background:var(--surface);cursor:pointer}
+.linkish{border:0;background:none;padding:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:14px}
+.linkish:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border-radius:99px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600;font-size:14.5px;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:disabled:hover{border-color:var(--line)}
+.btn.primary:disabled:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.file{position:relative;overflow:hidden}
+.file input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+.file:focus-within{outline:2px solid var(--accent);outline-offset:3px}
+.hint{font-size:13.5px;color:var(--muted);max-width:56ch}
+#logoName{font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:22ch}
+
+.out{position:sticky;top:18px;display:flex;flex-direction:column;gap:14px;padding:18px;border:1px solid var(--line);border-radius:22px;background:var(--surface)}
+.preview{aspect-ratio:1;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.preview svg{display:block;width:100%;height:100%}
+.preview.is-empty svg{opacity:.16}
+.status{font-size:14px;color:var(--muted);min-height:2.9em}
+.status.bad{color:var(--bad)}
+.warn{font-size:14px;color:var(--warn);padding:10px 12px;border-radius:10px;background:var(--sunk)}
+.dl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dl .btn{flex:1}
+.dl-size{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted)}
+.dl-size select{padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:14px}
+
+.about{margin-top:clamp(56px,10vw,104px);padding-top:clamp(32px,6vw,56px);border-top:1px solid var(--line)}
+.about h2{font:700 clamp(24px,3.6vw,32px)/1.15 var(--sans);letter-spacing:-.02em;margin-bottom:16px}
+.about section > p,.about li{font:400 18px/1.65 var(--serif);max-width:66ch}
+.about section > p + p{margin-top:14px}
+.about section + section{margin-top:clamp(40px,7vw,64px)}
+.about ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:8px}
+.faq details{border-bottom:1px solid var(--line);max-width:70ch}
+.faq details:first-of-type{border-top:1px solid var(--line)}
+.faq summary{cursor:pointer;padding:15px 0;font-weight:600;font-size:16px;list-style-position:inside}
+.faq details p{font:400 17.5px/1.65 var(--serif);color:var(--muted);padding:0 0 18px}
+
+footer{margin-top:clamp(56px,9vw,96px);padding:26px 0 40px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+
+@media (max-width:820px){
+  .bench{grid-template-columns:1fr}
+  .out{position:static;max-width:420px}
+  .top-note{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="wm" href="../" aria-label="Delf Studio tools, home">delf<b>studio</b><i>.</i></a>
+    <span class="top-note">QR Code Generator</span>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>QR codes that never expire.</h1>
+      <p>Make a code for a link, your Wi-Fi, a WhatsApp chat or a contact card. No sign-up, no scan limits, and nothing you type leaves your browser.</p>
+    </div>
+
+    <div class="bench">
+      <form class="form" onsubmit="return false" autocomplete="off">
+        <fieldset class="group">
+          <legend>What should the code open?</legend>
+          <div class="chips" id="types"></div>
+          <div class="fields" id="fields"></div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Shape</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="style" value="square" checked><span>Squares</span></label>
+            <label class="chip"><input type="radio" name="style" value="rounded"><span>Rounded</span></label>
+            <label class="chip"><input type="radio" name="style" value="dots"><span>Dots</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Colours</legend>
+          <div class="row">
+            <label class="colour"><input type="color" id="fg" value="#000000"> Code</label>
+            <label class="colour"><input type="color" id="bg" value="#ffffff"> Background</label>
+            <button class="linkish" type="button" id="resetColours">Back to black and white</button>
+          </div>
+        </fieldset>
+
+        <div class="group">
+          <h2 class="group-title">Logo in the middle</h2>
+          <div class="row">
+            <label class="btn file"><input type="file" id="logo" accept="image/png,image/jpeg,image/webp,image/svg+xml">Choose image</label>
+            <span id="logoName">No logo</span>
+            <button class="linkish" type="button" id="logoRemove" hidden>Remove logo</button>
+          </div>
+          <p class="hint">Optional. A square image with a plain background works best.</p>
+        </div>
+      </form>
+
+      <aside class="out" aria-label="Your QR code">
+        <div class="preview is-empty" id="preview" role="img" aria-label="QR code preview"></div>
+        <p class="status" id="status" aria-live="polite"></p>
+        <p class="warn" id="warn" hidden></p>
+        <div class="dl">
+          <button class="btn primary" type="button" id="downloadPng" disabled>Download PNG</button>
+          <button class="btn" type="button" id="downloadSvg" disabled>Download SVG</button>
+        </div>
+        <label class="dl-size">PNG size
+          <select id="pngSize">
+            <option value="512">512 px (screens)</option>
+            <option value="1024" selected>1024 px (most uses)</option>
+            <option value="2048">2048 px (large print)</option>
+          </select>
+        </label>
+      </aside>
+    </div>
+
+    <div class="about">
+      <section>
+        <h2>Why these codes keep working</h2>
+        <p>Many QR services route your code through their own website, so they can count scans and, later, switch the code off unless you pay. The codes made here hold your link or details directly. There is no middleman, so there is nothing that can expire, be limited or be taken down.</p>
+        <p>The trade-off is that a printed code cannot be changed afterwards and there are no scan statistics. If your link might change, point the code at a page you control and update that page instead.</p>
+      </section>
+
+      <section>
+        <h2>Before you print</h2>
+        <ul>
+          <li>Scan the code with your own phone first, from the distance people will really use.</li>
+          <li>Keep the code dark and the background light. That is what phone cameras read best.</li>
+          <li>Leave the blank border around the code. Scanners need it.</li>
+          <li>Print it at least 2 cm wide, and larger for posters people scan from further away.</li>
+          <li>Use the SVG file for print work. It stays sharp at any size.</li>
+        </ul>
+      </section>
+
+      <section class="faq">
+        <h2>Questions people ask</h2>
+        <details>
+          <summary>Do the QR codes expire?</summary>
+          <p>No. Your content is stored inside the code itself, so it works for as long as the link or details it holds stay valid.</p>
+        </details>
+        <details>
+          <summary>Is it free for business use?</summary>
+          <p>Yes. Use the codes on menus, packaging, flyers, business cards or anywhere else, with no charge and no attribution.</p>
+        </details>
+        <details>
+          <summary>Can I change where the code goes after printing?</summary>
+          <p>No. These are static codes, so the content is fixed once made. If you need a different link, make a new code.</p>
+        </details>
+        <details>
+          <summary>Can I see how many people scanned it?</summary>
+          <p>Not from here, because scans do not pass through any server of ours. To count visits, link to a page on your own site and check that page in your website analytics.</p>
+        </details>
+        <details>
+          <summary>How does the Wi-Fi code work?</summary>
+          <p>Guests point their phone camera at the code and tap the prompt to join your network, without typing the password. It works on current iPhones and Android phones.</p>
+        </details>
+        <details>
+          <summary>Will a logo stop the code from scanning?</summary>
+          <p>It should not. When you add a logo, the code is made with the highest level of error correction, which lets scanners read it even with the middle covered. Always test it before printing.</p>
+        </details>
+        <details>
+          <summary>Is my information private?</summary>
+          <p>Yes. The code is drawn by your own browser. Your links, passwords and contact details are never sent to us or stored.</p>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <span>QR Code Generator by Delf Studio.</span>
+    <span>QR Code is a registered trademark of DENSO WAVE INCORPORATED. <a href="https://github.com/delfwebx/delfstudio.tools" rel="noopener">Source code</a>.</span>
+  </footer>
+</div>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"QR Code Generator by Delf Studio","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in the browser)","description":"Make QR codes for links, Wi-Fi, WhatsApp, email, phone numbers and contact cards. Free, no sign-up, and the codes never expire.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
