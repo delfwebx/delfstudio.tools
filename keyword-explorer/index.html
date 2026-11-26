@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keyword Explorer by Delf Studio: keyword ideas, volume, difficulty and rankings</title>
+<meta name="description" content="Find keyword ideas and questions from Google, YouTube and Amazon for free. Connect your own DataForSEO account to add search volume, keyword difficulty, CPC, trends, the top 10 results and the keywords any site ranks for.">
+<meta property="og:title" content="Keyword Explorer by Delf Studio">
+<meta property="og:description" content="Keyword ideas for free, plus volume, difficulty and rankings with your own data account.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FBF7F0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232E3B34'/%3E%3Ccircle cx='28' cy='28' r='12' fill='none' stroke='%23FBF7F0' stroke-width='5'/%3E%3Cpath d='M37 37l11 11' stroke='%23C9785B' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Caladea:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF7F0;--surface:#FFFFFF;--sunk:#F3ECE0;--ink:#2E3B34;--muted:#5F6E66;--line:#E8DFD1;
+  --accent:#A85D44;--accent-ink:#FFFFFF;--mark:#F5DED4;--dot:#C9785B;
+  --bad:#B03A2E;--bad-soft:#FBEAE7;--warn:#8A5A12;--warn-soft:#F8EBCB;--ok:#3D6B4B;--ok-soft:#E6F1E8;
+  --kd1:#3D6B4B;--kd2:#6E8B3D;--kd3:#B08A1E;--kd4:#C46A2B;--kd5:#B03A2E;--kd6:#7E2318;
+  --sans:"Poppins","Segoe UI",Helvetica,Arial,sans-serif;
+  --serif:"Caladea",Georgia,"Times New Roman",serif;
+  --code:Consolas,Menlo,"Courier New",monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1C2420;--surface:#26312B;--sunk:#171E1A;--ink:#F6F0E6;--muted:#A9B5AD;--line:#39463F;
+    --accent:#E39C80;--accent-ink:#1C2420;--mark:#5B3B2F;--dot:#E39C80;
+    --bad:#F09285;--bad-soft:#4A2622;--warn:#E5B466;--warn-soft:#4A3C1C;--ok:#7FC096;--ok-soft:#24392B;
+    --kd1:#7FC096;--kd2:#A9C56E;--kd3:#E5C35A;--kd4:#EE9A5E;--kd5:#F09285;--kd6:#E86A5A;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15.5px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.hidden{display:none !important}
+
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,3vw,32px)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.wm{font:300 19px/1 var(--sans);letter-spacing:-.02em;text-decoration:none}
+.wm b{font-weight:700}
+.wm i{font-style:normal;font-weight:700;color:var(--dot)}
+.top-note{font-size:13.5px;color:var(--muted);display:flex;gap:14px;align-items:center}
+.conn{display:inline-flex;align-items:center;gap:6px}
+.conn::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.conn.on::before{background:var(--ok)}
+
+.hero{padding:clamp(16px,4vw,40px) 0 clamp(20px,3vw,28px)}
+.hero h1{font:700 clamp(32px,5.6vw,54px)/1.02 var(--sans);letter-spacing:-.035em;text-wrap:balance;max-width:20ch}
+.hero p{font:400 clamp(17.5px,2.1vw,19.5px)/1.55 var(--serif);color:var(--muted);max-width:66ch;margin-top:14px}
+
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:6px;margin-bottom:18px;border:1px solid var(--line);border-radius:99px;background:var(--surface);width:fit-content;max-width:100%}
+nav.tabs button{border:0;background:none;padding:9px 18px;border-radius:99px;font-weight:600;font-size:14.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button.on{background:var(--ink);color:var(--paper)}
+section.tab{display:none}
+section.tab.on{display:block}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:16px}
+.card h2{font:600 18px/1.3 var(--sans);letter-spacing:-.01em;margin:0 0 6px}
+.card h3{font:600 15px/1.3 var(--sans);margin:18px 0 6px}
+.card ul{margin:6px 0 0;padding-left:20px}
+.card ul li{margin:8px 0;max-width:86ch}
+.card-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+label.f{font-weight:600;font-size:14px;display:block;margin:14px 0 5px}
+.hint{color:var(--muted);font-size:13.5px;font-weight:400}
+p.hint{margin:6px 0 0;max-width:86ch}
+input[type=text],input[type=password],input[type=search],select{border:1px solid var(--muted);border-radius:10px;padding:9px 11px;background:var(--paper);color:var(--ink);font-size:15px;max-width:100%}
+input[type=text],input[type=password],input[type=search]{width:100%}
+.searchrow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.searchrow .grow{flex:1 1 320px;min-width:0}
+.searchrow .btn{margin:0}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.row>*{flex:1 1 260px;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:99px;padding:10px 18px;font-weight:600;font-size:14.5px;cursor:pointer;margin:14px 8px 0 0;white-space:nowrap}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.btn.small{padding:6px 12px;font-size:13px;margin:8px 8px 0 0}
+.opts{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:14px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:99px;background:var(--paper);padding:3px;gap:2px}
+.seg label{padding:6px 14px;cursor:pointer;font-size:13.5px;font-weight:500;border-radius:99px;position:relative}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){background:var(--ink);color:var(--paper)}
+.seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.chk{font-size:14px;display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.chk input{width:17px;height:17px;accent-color:var(--ink)}
+.msg{margin-top:14px;padding:11px 14px;border-radius:10px;font-size:14px;display:none}
+.msg.err{display:block;background:var(--bad-soft);color:var(--bad)}
+.msg.ok{display:block;background:var(--ok-soft);color:var(--ok)}
+.msg.warn{display:block;background:var(--warn-soft);color:var(--warn)}
+.msg.info{display:block;background:var(--sunk);color:var(--muted)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin:4px 0 16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stat b{display:block;font:700 26px/1.2 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.stat small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.trend{display:flex;align-items:flex-end;gap:3px;height:54px;margin-top:6px}
+.trend i{flex:1;background:var(--dot);border-radius:2px 2px 0 0;min-height:2px}
+.trend-lbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:3px}
+
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--muted);font-weight:600;font-size:12.5px;background:var(--sunk);white-space:nowrap}
+th.sort{cursor:pointer;user-select:none}
+th.sort:hover{color:var(--ink)}
+th.sort[data-dir=asc]::after{content:" \2191"}
+th.sort[data-dir=desc]::after{content:" \2193"}
+td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td.kw{font-weight:500}
+td.url{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:13px}
+td.url a{text-decoration:none}
+td.url a:hover{text-decoration:underline}
+td.cb,th.cb{width:30px}
+td.cb input,th.cb input{width:16px;height:16px;accent-color:var(--ink)}
+.kwlink{background:none;border:0;padding:0;cursor:pointer;text-align:left;font-weight:500}
+.kwlink:hover{color:var(--accent);text-decoration:underline}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.kd{display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.kd::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--kdc,var(--muted))}
+.kd.big{display:flex;font:700 26px/1.2 var(--sans);letter-spacing:-.02em}
+.stat b.word{font-size:20px;line-height:1.56;overflow-wrap:anywhere}
+.kd.big::before{width:14px;height:14px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:10px 0 12px}
+.toolbar input[type=search]{width:auto;flex:1 1 220px;padding:7px 11px;font-size:14px}
+.toolbar select{padding:7px 10px;font-size:14px}
+.count{font-size:13.5px;color:var(--muted)}
+.progress{height:4px;background:var(--sunk);border-radius:2px;overflow:hidden;margin-top:12px}
+.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.empty{padding:26px 8px;text-align:center;color:var(--muted);font-size:14px}
+.split{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:980px){.split{grid-template-columns:1fr}}
+.note{font-size:13.5px;color:var(--muted);max-width:86ch;margin-top:8px}
+footer{margin-top:clamp(40px,7vw,72px);padding:26px 0 40px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+@media (max-width:700px){.top-note .cost{display:none}nav.tabs{border-radius:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <a class="wm" href="../" aria-label="Delf Studio tools, home">delf<b>studio</b><i>.</i></a>
+  <span class="top-note"><span class="cost" id="cost-note"></span><span class="conn" id="conn-note">Free mode</span></span>
+</header>
+
+<div class="hero">
+  <h1>Find the keywords worth writing for.</h1>
+  <p>Get keyword ideas and the questions people ask on Google, YouTube and Amazon, free. Connect your own DataForSEO account to add search volume, difficulty, cost per click, a 12-month trend, the current top 10 and the keywords any website ranks for.</p>
+</div>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button data-tab="explore" class="on" role="tab" aria-selected="true">Keyword Explorer</button>
+  <button data-tab="site" role="tab" aria-selected="false">Site Explorer</button>
+  <button data-tab="lists" role="tab" aria-selected="false">My lists</button>
+  <button data-tab="connect" role="tab" aria-selected="false">Connect data</button>
+</nav>
+
+<main>
+
+<!-- ================= KEYWORD EXPLORER ================= -->
+<section class="tab on" id="tab-explore">
+  <div class="card">
+    <form class="searchrow" id="kw-form">
+      <div class="grow">
+        <label class="f" for="kw-in" style="margin-top:0">Keyword</label>
+        <input type="search" id="kw-in" placeholder="things to do in kyoto" spellcheck="false" autocomplete="off" required>
+      </div>
+      <div>
+        <label class="f" for="loc" style="margin-top:0">Country</label>
+        <select id="loc"></select>
+      </div>
+      <div>
+        <label class="f" for="lang" style="margin-top:0">Language</label>
+        <select id="lang"></select>
+      </div>
+      <button class="btn" type="submit" id="kw-go">Explore</button>
+    </form>
+    <div class="msg" id="kw-msg" role="status"></div>
+  </div>
+
+  <div id="kw-out" class="hidden">
+    <div class="stats" id="kw-stats"></div>
+
+    <div class="split">
+      <div class="card">
+        <div class="card-head">
+          <h2>Keyword ideas</h2>
+          <span class="count" id="ideas-count"></span>
+        </div>
+        <div class="opts" style="margin-top:6px">
+          <div class="seg" id="ideas-src">
+            <label><input type="radio" name="src" value="auto" checked>Autocomplete (free)</label>
+            <label><input type="radio" name="src" value="match">Matching terms</label>
+            <label><input type="radio" name="src" value="related">Related terms</label>
+          </div>
+          <div class="seg" id="ac-engine">
+            <label><input type="radio" name="engine" value="google" checked>Google</label>
+            <label><input type="radio" name="engine" value="youtube">YouTube</label>
+            <label><input type="radio" name="engine" value="amazon">Amazon</label>
+          </div>
+        </div>
+        <p class="hint" id="ideas-hint"></p>
+        <div class="progress hidden" id="ideas-prog"><i></i></div>
+        <div class="toolbar">
+          <input type="search" id="ideas-filter" placeholder="Filter, for example: best" aria-label="Filter keyword ideas">
+          <select id="ideas-type" aria-label="Show">
+            <option value="all">All ideas</option>
+            <option value="q">Questions only</option>
+            <option value="cmp">Comparisons (vs, or, alternative)</option>
+            <option value="long">Long tail (4+ words)</option>
+          </select>
+        </div>
+        <div class="tablewrap" id="ideas-table"></div>
+        <div>
+          <button class="btn small" id="ideas-metrics" type="button">Get volume and difficulty for ticked</button>
+          <button class="btn small ghost" id="ideas-save" type="button">Save ticked to a list</button>
+          <button class="btn small ghost" id="ideas-csv" type="button">Export CSV</button>
+          <button class="btn small ghost" id="ideas-copy" type="button">Copy keywords</button>
+        </div>
+        <div class="msg" id="ideas-msg" role="status"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Top 10 on Google</h2>
+          <a class="hint" id="trends-link" href="#" target="_blank" rel="noopener">Open in Google Trends</a>
+        </div>
+        <div id="serp-box"><p class="empty">Connect DataForSEO to see who ranks for this keyword right now.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SITE EXPLORER ================= -->
+<section class="tab" id="tab-site">
+  <div class="card">
+    <form class="searchrow" id="site-form">
+      <div class="grow">
+        <label class="f" for="site-in" style="margin-top:0">Website <span class="hint">(yours or a competitor's)</span></label>
+        <input type="text" id="site-in" placeholder="wondersofjapan.com" spellcheck="false" autocomplete="off" required>
+      </div>
+      <div>
+        <label class="f" for="site-loc" style="margin-top:0">Country</label>
+        <select id="site-loc"></select>
+      </div>
+      <button class="btn" type="submit" id="site-go">Analyse site</button>
+    </form>
+    <p class="hint">Shows the Google keywords a site ranks for, its position for each, and the traffic each keyword is estimated to bring. Needs DataForSEO.</p>
+    <div class="msg" id="site-msg" role="status"></div>
+  </div>
+  <div id="site-out" class="hidden">
+    <div class="stats" id="site-stats"></div>
+    <div class="card">
+      <div class="card-head"><h2>Organic keywords</h2><span class="count" id="site-count"></span></div>
+      <div class="toolbar">
+        <input type="search" id="site-filter" placeholder="Filter keywords or pages" aria-label="Filter site keywords">
+        <select id="site-pos" aria-label="Positions">
+          <option value="all">All positions</option>
+          <option value="3">Top 3</option>
+          <option value="10">Positions 4 to 10 (quick wins)</option>
+          <option value="20">Positions 11 to 20 (page 2)</option>
+        </select>
+      </div>
+      <div class="tablewrap" id="site-table"></div>
+      <button class="btn small ghost" id="site-save" type="button">Save ticked to a list</button>
+      <button class="btn small ghost" id="site-csv" type="button">Export CSV</button>
+      <button class="btn small ghost" id="site-more" type="button">Load 100 more</button>
+      <div class="msg" id="site-msg2" role="status"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LISTS ================= -->
+<section class="tab" id="tab-lists">
+  <div class="card">
+    <h2>My keyword lists</h2>
+    <p class="hint">Keep one list per website or project. Lists are saved in this browser only, so export a CSV if you want a copy elsewhere.</p>
+    <div class="toolbar" style="margin-top:14px">
+      <select id="list-pick" aria-label="List"></select>
+      <button class="btn small ghost" id="list-new" type="button" style="margin:0">New list</button>
+      <button class="btn small ghost" id="list-rename" type="button" style="margin:0">Rename</button>
+      <button class="btn small ghost" id="list-del" type="button" style="margin:0">Delete list</button>
+    </div>
+    <div class="tablewrap" id="list-table"></div>
+    <button class="btn small" id="list-refresh" type="button">Refresh volume and difficulty</button>
+    <button class="btn small ghost" id="list-csv" type="button">Export CSV</button>
+    <button class="btn small ghost" id="list-copy" type="button">Copy keywords</button>
+    <button class="btn small ghost" id="list-remove" type="button">Remove ticked</button>
+    <div class="msg" id="list-msg" role="status"></div>
+  </div>
+</section>
+
+<!-- ================= CONNECT ================= -->
+<section class="tab" id="tab-connect">
+  <div class="card">
+    <h2>Connect your DataForSEO account</h2>
+    <p class="hint">DataForSEO is the data service behind many keyword tools. You pay them per lookup, with no monthly plan, and new accounts usually get some free test credit. Find your API login and password in the DataForSEO dashboard under API Access.</p>
+    <div class="row">
+      <div><label class="f" for="d4-login">API login <span class="hint">(usually your email)</span></label><input type="text" id="d4-login" spellcheck="false" autocomplete="username"></div>
+      <div><label class="f" for="d4-pass">API password <span class="hint">(not your dashboard password)</span></label><input type="password" id="d4-pass" spellcheck="false" autocomplete="current-password"></div>
+    </div>
+    <div class="opts"><label class="chk"><input type="checkbox" id="d4-remember"> Remember on this device</label></div>
+    <button class="btn" id="d4-save" type="button">Connect and check balance</button>
+    <button class="btn ghost" id="d4-clear" type="button">Disconnect</button>
+    <a class="btn ghost" href="https://app.dataforseo.com/register" target="_blank" rel="noopener">Create a DataForSEO account</a>
+    <div class="msg" id="d4-msg" role="status"></div>
+  </div>
+  <div class="card">
+    <h2>What each part uses</h2>
+    <div class="tablewrap"><table>
+      <tr><th>Feature</th><th>Data</th><th>Cost</th></tr>
+      <tr><td>Autocomplete ideas and questions</td><td>Google, YouTube and Amazon suggestions</td><td>Free</td></tr>
+      <tr><td>Keyword overview (volume, difficulty, CPC, intent, trend)</td><td>DataForSEO Labs</td><td>1 paid lookup per keyword searched</td></tr>
+      <tr><td>Top 10 on Google</td><td>DataForSEO live results</td><td>1 paid lookup</td></tr>
+      <tr><td>Matching and related terms</td><td>DataForSEO Labs</td><td>1 paid lookup per click</td></tr>
+      <tr><td>Volume and difficulty for ticked ideas</td><td>DataForSEO Labs</td><td>1 to 2 paid lookups per batch of up to 700</td></tr>
+      <tr><td>Site Explorer</td><td>DataForSEO Labs</td><td>2 paid lookups, then 1 per extra 100 keywords</td></tr>
+    </table></div>
+    <p class="note">The running cost of this visit is shown at the top of the page, taken from what DataForSEO reports for each lookup.</p>
+  </div>
+  <div class="card">
+    <h2>Good to know</h2>
+    <ul>
+      <li><b>Your login stays with you.</b> It is kept in this browser and sent only to api.dataforseo.com. Leave "Remember" off on a shared computer, and it is forgotten when you close the tab.</li>
+      <li><b>Numbers differ between tools.</b> Ahrefs, Semrush and DataForSEO each estimate volume their own way, so compare keywords within one tool rather than across tools.</li>
+      <li><b>Difficulty runs from 0 to 100.</b> It reflects how strong the pages already ranking are. Under 30 is usually realistic for a newer site.</li>
+      <li><b>Autocomplete is a good free signal.</b> If Google suggests a phrase, real people are typing it. It just does not tell you how many.</li>
+      <li><b>If autocomplete stops answering,</b> the search engine may be limiting quick repeat requests. Wait a minute and try again.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <span>Keyword Explorer by Delf Studio.</span>
+  <span>Keyword data from DataForSEO when connected. Not affiliated with Google, YouTube, Amazon, Ahrefs or DataForSEO. <a href="https://github.com/delfwebx/delfstudio.tools" rel="noopener">Source code</a>.</span>
+</footer>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>

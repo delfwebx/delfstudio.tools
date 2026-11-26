@@ -9,6 +9,7 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 | Image Cropper | `image-cropper/` | Crops to ratios, exact social sizes, circles or rounded corners, then optimises; queue for batches |
 | QR Code Generator | `qr-code-generator/` | Makes static QR codes (link, text, Wi-Fi, email, phone, WhatsApp, contact card) with colours, shapes and a logo |
 | Email Click Heatmap | `email-click-heatmap/` | Specialised: tags links in Salesforce Marketing Cloud emails and draws a click heatmap from exported click data |
+| Keyword Explorer | `keyword-explorer/` | Specialised: free autocomplete keyword ideas; with the visitor's own DataForSEO account adds volume, difficulty, CPC, trend, top 10 and Site Explorer |
 
 `index.html` at the top level is the menu page that links to every tool. It has two groups: Everyday tools and Specialised tools.
 
@@ -41,6 +42,20 @@ Exact-size presets follow platform recommendations checked in November 2026. To 
 - `email-click-heatmap/js/app.js`: the link tagger, click-data parser, bot filter and heatmap drawing.
 
 The pasted email is previewed in a sandboxed frame with scripts removed. Tracking pixels are blanked in the preview so building a report never logs an open. The demo uses an invented school on example.com.
+
+## Keyword Explorer
+
+- `keyword-explorer/index.html`: the page, including the Connect data help and cost table.
+- `keyword-explorer/js/app.js`: autocomplete collection, DataForSEO calls, the ideas table, Site Explorer and saved lists.
+
+Two layers:
+
+- **Free:** Google and YouTube autocomplete (JSONP from `suggestqueries.google.com`) and Amazon autocomplete (`completion.amazon.com`, which may be blocked in some browsers). Each search sends the keyword plus letters a to z, question words and common endings, three at a time.
+- **Paid, the visitor's own account:** DataForSEO API v3. Endpoints used: `dataforseo_labs/google/keyword_overview/live` (overview and "get volume" for up to 700 keywords per call), `keyword_suggestions/live`, `related_keywords/live`, `ranked_keywords/live`, `domain_rank_overview/live`, `serp/google/organic/live/regular` and `appendix/user_data` (balance check).
+
+The DataForSEO login is stored in `sessionStorage`, or `localStorage` when "Remember on this device" is ticked, and is only ever sent to `api.dataforseo.com`. There is no shared key in the code, so the public page costs the site owner nothing. Keyword lists live in `localStorage` under `ks-lists`. A link such as `keyword-explorer/?q=kyoto+hotels` starts a search straight away.
+
+To add a country, add a line to `LOCATIONS` at the top of `app.js` with its DataForSEO `location_code` and Google `gl` code.
 
 ## QR Code Generator
 
