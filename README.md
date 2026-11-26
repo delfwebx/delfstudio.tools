@@ -9,6 +9,7 @@ Free, single-purpose web tools. Each tool lives in its own folder and runs entir
 | Image Cropper | `image-cropper/` | Crops to ratios, exact social sizes, circles or rounded corners, then optimises; queue for batches |
 | QR Code Generator | `qr-code-generator/` | Makes static QR codes (link, text, Wi-Fi, email, phone, WhatsApp, contact card) with colours, shapes and a logo |
 | Email Click Heatmap | `email-click-heatmap/` | Specialised: tags links in Salesforce Marketing Cloud emails and draws a click heatmap from exported click data |
+| Quick Campaign Report | `quick-campaign-report/` | Specialised: turns Salesforce Marketing Cloud tracking figures into an Outlook-ready HTML report, for one send or several compared |
 
 `index.html` at the top level is the menu page that links to every tool. It has two groups: Everyday tools and Specialised tools.
 
@@ -41,6 +42,13 @@ Exact-size presets follow platform recommendations checked in November 2026. To 
 - `email-click-heatmap/js/app.js`: the link tagger, click-data parser, bot filter and heatmap drawing.
 
 The pasted email is previewed in a sandboxed frame with scripts removed. Tracking pixels are blanked in the preview so building a report never logs an open. The demo uses an invented school on example.com.
+
+## Quick Campaign Report
+
+- `quick-campaign-report/index.html`: the page, including the table that explains the status labels.
+- `quick-campaign-report/js/app.js`: the figures form, the rate calculations and status thresholds (the `st` object), the wording rules, and the report builder.
+
+The report is built from tables with inline styles only, so it survives Outlook and Outlook Classic. Open and click thresholds follow the GEMS Education standard; click-to-open follows the education industry median. To change a threshold, edit `st` in `app.js` and the matching row in the page's table. The example uses an invented school and invented figures.
 
 ## QR Code Generator
 

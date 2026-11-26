@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quick Campaign Report by Delf Studio: an Outlook-ready email performance report</title>
+<meta name="description" content="Type in the figures from a Salesforce Marketing Cloud tracking page and get a visual, Outlook-ready campaign report. Compare several sends in one report. Free, no sign-up, and nothing you type leaves your browser.">
+<meta property="og:title" content="Quick Campaign Report by Delf Studio">
+<meta property="og:description" content="Turn email tracking figures into an Outlook-ready report. Built for Salesforce Marketing Cloud senders.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FBF7F0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232E3B34'/%3E%3Crect x='15' y='34' width='8' height='16' rx='2' fill='%23FBF7F0'/%3E%3Crect x='28' y='24' width='8' height='26' rx='2' fill='%23FBF7F0'/%3E%3Crect x='41' y='14' width='8' height='36' rx='2' fill='%23C9785B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Caladea:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF7F0;--surface:#FFFFFF;--sunk:#F3ECE0;--ink:#2E3B34;--muted:#5F6E66;--line:#E8DFD1;
+  --accent:#A85D44;--accent-ink:#FFFFFF;--mark:#F5DED4;--dot:#C9785B;
+  --bad:#B03A2E;--bad-soft:#FBEAE7;--warn:#8A5A12;--warn-soft:#F8EBCB;--ok:#3D6B4B;--ok-soft:#E6F1E8;
+  --sans:"Poppins","Segoe UI",Helvetica,Arial,sans-serif;
+  --serif:"Caladea",Georgia,"Times New Roman",serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#1C2420;--surface:#26312B;--sunk:#171E1A;--ink:#F6F0E6;--muted:#A9B5AD;--line:#39463F;
+    --accent:#E39C80;--accent-ink:#1C2420;--mark:#5B3B2F;--dot:#E39C80;
+    --bad:#F09285;--bad-soft:#4A2622;--warn:#E5B466;--warn-soft:#4A3C1C;--ok:#7FC096;--ok-soft:#24392B;color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15.5px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+a{color:inherit}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+[hidden]{display:none !important}
+
+.wrap{max-width:980px;margin:0 auto;padding:0 clamp(18px,3vw,32px)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.wm{font:300 19px/1 var(--sans);letter-spacing:-.02em;text-decoration:none}
+.wm b{font-weight:700}
+.wm i{font-style:normal;font-weight:700;color:var(--dot)}
+.top-note{font-size:13.5px;color:var(--muted)}
+.hero{padding:clamp(16px,4vw,40px) 0 clamp(20px,3vw,28px)}
+.hero h1{font:700 clamp(32px,5.6vw,54px)/1.02 var(--sans);letter-spacing:-.035em;text-wrap:balance;max-width:20ch}
+.hero p{font:400 clamp(17.5px,2.1vw,19.5px)/1.55 var(--serif);color:var(--muted);max-width:66ch;margin-top:14px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:16px;min-width:0}
+.card h2{font:600 18px/1.3 var(--sans);letter-spacing:-.01em;margin:0 0 6px}
+.hint{color:var(--muted);font-size:13.5px;font-weight:400}
+p.hint{max-width:86ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:99px;padding:10px 18px;font-weight:600;font-size:14.5px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+.btn.small{padding:6px 12px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+.segb{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:99px;background:var(--paper);padding:3px;gap:2px}
+.segb button{border:0;background:none;padding:6px 14px;cursor:pointer;font-size:13.5px;font-weight:500;border-radius:99px}
+.segb button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.send{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px}
+.send-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.send-name{font-weight:600;flex:1;min-width:140px;overflow-wrap:anywhere}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;background:var(--sunk);color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+.grid .wide{grid-column:1/-1}
+.grp{grid-column:1/-1;font-size:12.5px;font-weight:600;color:var(--accent);margin-top:6px}
+label.fld{display:flex;flex-direction:column;gap:3px;min-width:0}
+label.fld span{font-size:12.5px;font-weight:500;color:var(--muted)}
+input[type=text],textarea{width:100%;border:1px solid var(--muted);border-radius:10px;padding:8px 10px;background:var(--paper);color:var(--ink);font-size:15px}
+textarea{min-height:76px;resize:vertical}
+.warns{margin-top:10px;padding:9px 12px;border-radius:10px;font-size:13.5px;background:var(--warn-soft);color:var(--warn)}
+.warns:empty{display:none}
+.status{font-size:13.5px;color:var(--muted);min-height:21px;margin-top:10px}
+/* The report preview keeps a light backdrop in both themes, because emails are designed on white. */
+.stagewrap{background:#E9E3D8;border:1px solid var(--line);border-radius:16px;padding:16px;overflow:auto;max-width:100%;margin-top:12px;color-scheme:light}
+.stagewrap .empty{font:15px/1.5 Arial,sans-serif;color:#5F6E66;padding:24px;text-align:center}
+#report-root{margin:0 auto;box-shadow:0 1px 4px rgba(0,0,0,.14)}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:8px;margin-top:10px}
+.word-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:22px}
+.word-head h2{margin:0}
+#wording > label.fld{margin-top:10px}
+.tablewrap{overflow-x:auto;margin-top:10px}
+table.std{border-collapse:collapse;width:100%;font-size:13.5px}
+table.std th,table.std td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.std th{color:var(--muted);font-weight:600;font-size:12.5px;background:var(--sunk)}
+footer{margin-top:clamp(40px,7vw,72px);padding:26px 0 40px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+@media (max-width:700px){.top-note{display:none}.pair{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <a class="wm" href="../" aria-label="Delf Studio tools, home">delf<b>studio</b><i>.</i></a>
+  <span class="top-note">Quick Campaign Report</span>
+</header>
+
+<div class="hero">
+  <h1>Turn tracking figures into a report your team will read.</h1>
+  <p>For teams who send with Salesforce Marketing Cloud. Type in the figures from the tracking Overview tab and get a visual report that pastes cleanly into Outlook. Add more sends to compare them in one report. Everything you type stays in your browser.</p>
+</div>
+
+<section class="card" id="step-sends">
+  <h2>1. Enter the figures</h2>
+  <p class="hint">One block per send. Copy the numbers from the tracking Overview tab. Rates are worked out for you, and anything that does not add up is flagged.</p>
+  <div id="sends"></div>
+  <div class="acts">
+    <button class="btn" id="add-send">Add a send</button>
+    <button class="btn ghost" id="load-example">Load the example</button>
+  </div>
+</section>
+
+<section class="card" id="step-report">
+  <h2>2. Your report</h2>
+  <div class="acts" id="mode-row" hidden>
+    <div class="segb" role="group" aria-label="Report type">
+      <button id="mode-ind" aria-pressed="true">Individual reports</button>
+      <button id="mode-com" aria-pressed="false">Combined report</button>
+    </div>
+    <div class="segb" id="tabs" role="group" aria-label="Send"></div>
+  </div>
+  <div class="acts">
+    <button class="btn" id="copy-rich">Copy for Outlook</button>
+    <button class="btn ghost" id="dl-html">Download HTML</button>
+    <button class="btn ghost" id="print-pdf">Print or save as PDF</button>
+    <button class="btn ghost" id="copy-code">Copy HTML code</button>
+  </div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+  <div class="stagewrap"><div id="preview"></div></div>
+
+  <div class="word-head">
+    <h2>Wording</h2>
+    <button class="btn ghost small" id="reset-copy">Reset wording</button>
+  </div>
+  <p class="hint">The takeaways and next steps are written from your figures. Edit any line and the report updates.</p>
+  <div id="wording"></div>
+</section>
+
+<section class="card" id="standards">
+  <h2>How the status labels are set</h2>
+  <p class="hint">Open and click rates follow the GEMS Education standard. Click-to-open rate follows the education industry median of about 7% (MailerLite benchmarks, December 2024 to November 2025). Delivery and unsubscribe rates follow general email norms.</p>
+  <div class="tablewrap">
+    <table class="std">
+      <thead><tr><th>Metric</th><th>How it is worked out</th><th>Labels</th></tr></thead>
+      <tbody>
+        <tr><td>Delivery rate</td><td>Delivered / sent</td><td>98% or more: Healthy. 95% to 98%: Watch. Under 95%: Low.</td></tr>
+        <tr><td>Open rate</td><td>Unique opens / delivered</td><td>38% or more: High. 34% to 38%: Above average. 30% to 34%: Average. 27% to 30%: Below average. Under 27%: Low.</td></tr>
+        <tr><td>Click rate</td><td>Unique clicks / delivered</td><td>1.5% or more: Above average. 1% to 1.5%: Average. Under 1%: Low.</td></tr>
+        <tr><td>Click-to-open rate</td><td>Unique clicks / unique opens</td><td>9% or more: Above average. 6% to 9%: Average. 4% to 6%: Below average. Under 4%: Low.</td></tr>
+        <tr><td>Unsubscribe rate</td><td>Unsubscribes / delivered</td><td>Under 0.2%: Healthy. 0.2% to 0.5%: Watch. Over 0.5%: High.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <span>Quick Campaign Report, part of <a href="../">Delf Studio Tools</a>. The example uses an invented school and invented figures.</span>
+  <span><a href="https://github.com/delfwebx/delfstudio.tools" rel="noopener">Source code</a></span>
+</footer>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>
